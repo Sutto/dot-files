@@ -1,0 +1,122 @@
+#!/usr/bin/ruby
+
+require 'pathname'
+require 'fileutils'
+
+class Projects
+
+  BASE  = Pathname("~/Code").expand_path
+  CACHE = Pathname("~/.config/projects/cache").expand_path
+  CUSTOM = Pathname("~/.config/projects/custom").expand_path
+
+  def self.action(name, *args)
+    instance = self.new
+    instance.send(name, *args) if instance.respond_to?(name)
+  end
+
+  def live_list
+    list = Dir[BASE.join("**/.git")].map { |f| Pathname(f).dirname.basename.to_s }.sort
+    write_lines_to_file CACHE, list
+    list
+  end
+
+  def cached_list
+    # Cache is readable and less than 3 minutes out of date with the code dir.
+    if CACHE.readable? && File.mtime(CACHE) >= (File.mtime(BASE) - 180)
+      lines_from_file CACHE
+    end
+  end
+
+  def custom_list
+    lines_from_file CUSTOM
+  end
+
+  def project_list
+    (custom_list + (cached_list || live_list)).uniq.sort
+  end
+
+  def generate!
+    write_lines_to_file CACHE, live_list
+  end
+
+  # Actions
+
+  def regenerate
+    generate!
+  end
+
+  def list
+    project_list.each do |project|
+      puts project
+    end
+  end
+
+  def add(name = nil)
+    name = name.to_s.strip
+    die! "Must give a name" if name.empty?
+    write_lines_to_file CUSTOM, (custom_list + [name]) 
+  end
+
+  def remove(name = nil)
+    name = name.to_s.strip
+    die! "Must give a name" if name.empty?
+    list = custom_list.reject { |i| i.downcase == name.downcase }
+    write_lines_to_file CUSTOM, list
+  end
+
+  def usage
+    puts "#{$0} {usage,list,add,remove,regenerate}"
+  end
+
+  def path(name = nil)
+    name = name.to_s.strip
+    die! "Must provide a name" if name.empty?
+    value = Dir[BASE.join("**/#{name}")].select { |p| File.directory?(p) }.first
+    if value.nil?
+      die! "Unable to find project path for '#{name}'"
+    else
+      puts File.expand_path value
+    end
+  end
+
+  protected
+
+  def die!(error)
+    $stderr.puts error
+    exit! 1
+  end
+
+  def lines_from_file(f)
+    contents = f.read rescue ""
+    contents.split("\n").map { |r| r.strip }.reject { |r| r.empty? }.sort
+  end
+
+  def write_lines_to_file(file, lines)
+    contents = Array(lines).flatten.uniq.sort.join("\n")
+    FileUtils.mkdir_p File.dirname(file)
+    File.open(file, "w+") do |f|
+      f.write contents
+    end
+  end
+
+end
+
+action = ARGV.shift.to_s.strip
+
+case action
+when "", "usage"
+  Projects.action :usage
+when "list"
+  Projects.action :list
+when "add"
+  Projects.action :add, ARGV.shift
+when "remove"
+  Projects.action :remove, ARGV.shift
+when "regenerate"
+  Projects.action :regenerate
+when "path"
+  Projects.action :path, ARGV.shift
+else
+  Projects.action :usage
+  exit 1
+end
