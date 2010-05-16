@@ -22,11 +22,6 @@ end
 # Require PrettyPrint cuz it pwns...how did I not know about this?
 require 'pp'
  
-# Requiring some awesome libs for console
-# http://drnicwilliams.com/2006/10/12/my-irbrc-for-consoleirb/
-# require 'map_by_method'
-# require 'what_methods'
- 
 # Benchmarking
 require 'benchmark'
 def bench(n=1e3,&b)
@@ -108,7 +103,7 @@ end
 
 proc do
   path = File.join(Dir.pwd, ".irb")
-  load(path) if File.exist?(path)
+  load(path) if File.file?(path)
 end.call
 
 if defined?(Rails)
