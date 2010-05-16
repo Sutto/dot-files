@@ -2,8 +2,9 @@
 require 'rubygems'
 
 require 'irb/completion'
-require 'irb/ext/save-history'
-#ARGV.concat [ "--readline", "--prompt-mode", "simple" ]
+
+completion_path = File.expand_path("~/.irb/fixed_save_history.rb")
+require completion_path if File.exist?(completion_path)
 IRB.conf[:SAVE_HISTORY] = 10000000
 IRB.conf[:HISTORY_FILE] = File.expand_path("~/.irb-save-history")
  
