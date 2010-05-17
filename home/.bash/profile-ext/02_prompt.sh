@@ -22,7 +22,7 @@ function __bash_git_dirty {
   [[ -z "$git_dir" ]] && return 0
   
   if [[ ! -z $(git status | grep 'added to commit' 2> /dev/null) ]]; then
-    echo -n "(!) "  
+    echo -n "♼ "  
   fi 
 
 }
