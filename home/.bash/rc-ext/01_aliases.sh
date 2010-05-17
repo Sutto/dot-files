@@ -2,6 +2,9 @@
 
 alias bi="bundle install --disable-shared-gems .bundle-cache"
 alias be="bundle exec"
+alias gi="git init"
+alias gc="git clone"
+alias gr="git remote"
 
 eval $(hub alias -s bash)
 
