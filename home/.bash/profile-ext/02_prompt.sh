@@ -1,5 +1,5 @@
 git_dirty_marker="✘"
-prompt_designator_symbol="➤"
+prompt_designator_symbol="‣"
 prompt_designator_alternate="…"
 
 _prompt_colour() {
@@ -50,7 +50,7 @@ _prompt_pwd="$(_prompt_colour green)\W$(_prompt_colour default)"
 _prompt_git_branch="$(_prompt_colour blue)\$(__bash_git_branch)$(_prompt_colour default)"
 _prompt_git_dirty="$(_prompt_colour magenta)\$(__bash_git_dirty)$(_prompt_colour default)"
 _prompt_rvm_interpreter="$(_prompt_colour yellow)\$(__bash_rvm_prompt_additions)$(_prompt_colour default)"
-_prompt_input_designator="\n$(_prompt_colour green)$prompt_designator_symbol$(_prompt_colour default) "
+_prompt_input_designator="\n$(_prompt_colour red)$prompt_designator_symbol$(_prompt_colour default) "
 _prompt_input_continued="$(_prompt_colour yellow)$prompt_designator_alternate$(_prompt_colour default) "
 
 
