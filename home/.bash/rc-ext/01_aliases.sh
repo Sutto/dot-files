@@ -60,4 +60,4 @@ alias rr='touch tmp/restart.txt'
 alias wl='tail -f log/*.log'
 alias rwl='rr && wl'
 
-alias udf='cd ~/.homesick/repos/dot-files && git pull && homesick symlink dot-files'
+alias udf='cd ~/.homesick/repos/dot-files && git pull && homesick symlink dot-files && cd -'
