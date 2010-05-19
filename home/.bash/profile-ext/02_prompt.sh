@@ -1,6 +1,8 @@
-git_dirty_marker="♼ "
+git_dirty_marker="✘"
+prompt_designator_symbol="➤"
+prompt_designator_alternate="…"
 
-__pc() {
+_prompt_color() {
   ~/.rvm/scripts/color "$1"
 }
 
@@ -11,21 +13,15 @@ _prompt_colour() {
   else
     local color_number
     case "$1" in
-    green)
-    color_number=2;
-    ;;
-    blue)
-    color_number=4;
-    ;;
-    magenta)
-    color_number=5;
-    ;;
-    yellow)
-    color_number=3;
-    ;;
-    *)
-    color_number=9;
-    ;;
+    black) color_number=0; ;;
+    red) color_number=1; ;;
+    green) color_number=2; ;;
+    yellow) color_number=3; ;;
+    blue) color_number=4; ;;
+    magenta) color_number=5; ;;
+    cyan) color_number=6; ;;
+    white) color_number=7; ;;
+    *) color_number=9; ;;
     esac
     echo -n -e "\033[3${color_number}m"
   fi
@@ -54,9 +50,14 @@ __bash_rvm_prompt_additions() {
 }
 
 # Each part of the prompt.
-_prompt_pwd="\$(_prompt_color green)\W\[\$(__pc default)\]"
-_prompt_git_branch="\[\$(__pc blue)\]\$(__bash_git_branch)\[\$(__pc default)\]"
-_prompt_git_dirty="\[\$(__pc magenta)\]\$(__bash_git_dirty)\[\$(__pc default)\]"
-_prompt_rvm_interpreter="\[\$(__pc yellow)\]\$(__bash_rvm_prompt_additions)\[\$(__pc default)\]"
+_prompt_pwd="\$(_prompt_color green)\W\$(_prompt_color default)"
+_prompt_git_branch="\$(_prompt_color blue)\$(__bash_git_branch)\$(_prompt_color default)"
+_prompt_git_dirty="\$(_prompt_color magenta)\$(__bash_git_dirty)\$(_prompt_color default)"
+_prompt_rvm_interpreter="\$(_prompt_color yellow)\$(__bash_rvm_prompt_additions)\$(_prompt_color default)"
+_prompt_input_designator="\n\$(_prompt_color green)$prompt_designator_symbol\$(_prompt_color default) "
+_prompt_input_continued="\$(_prompt_color yellow)$prompt_designator_alternate\$(_prompt_color default) "
 
-PS1="${_prompt_pwd} ${_prompt_git_branch}${_prompt_rvm_interpreter}${_prompt_git_dirty}\n\\$ "
+
+PS1="${_prompt_pwd} ${_prompt_git_branch}${_prompt_rvm_interpreter}${_prompt_git_dirty}${_prompt_input_designator}"
+PS2="${_prompt_input_continued}"
+
