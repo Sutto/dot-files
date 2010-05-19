@@ -5,7 +5,7 @@ prompt_designator_alternate="…"
 _prompt_colour() {
   echo -n '\['
   if [[ "$1" -eq "default" ]]; then
-    tput setaf sgr0
+    echo -n "\\e[0m"
   else
     local color_number
     case "$1" in
@@ -19,7 +19,7 @@ _prompt_colour() {
     white) color_number=7; ;;
     *) color_number=9; ;;
     esac
-    tput setaf $color_number
+    echo -n "\\e[3${color_number}m" 
   fi
   echo -n '\]'
 }
