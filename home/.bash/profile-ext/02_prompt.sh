@@ -2,10 +2,6 @@ git_dirty_marker="✘"
 prompt_designator_symbol="➤"
 prompt_designator_alternate="…"
 
-_prompt_color() {
-  ~/.rvm/scripts/color "$1"
-}
-
 _prompt_colour() {
   echo -n '\['
   if [[ "$1" -eq "default" ]]; then
@@ -50,12 +46,12 @@ __bash_rvm_prompt_additions() {
 }
 
 # Each part of the prompt.
-_prompt_pwd="\$(_prompt_color green)\W\$(_prompt_color default)"
-_prompt_git_branch="\$(_prompt_color blue)\$(__bash_git_branch)\$(_prompt_color default)"
-_prompt_git_dirty="\$(_prompt_color magenta)\$(__bash_git_dirty)\$(_prompt_color default)"
-_prompt_rvm_interpreter="\$(_prompt_color yellow)\$(__bash_rvm_prompt_additions)\$(_prompt_color default)"
-_prompt_input_designator="\n\$(_prompt_color green)$prompt_designator_symbol\$(_prompt_color default) "
-_prompt_input_continued="\$(_prompt_color yellow)$prompt_designator_alternate\$(_prompt_color default) "
+_prompt_pwd="\$(_prompt_colour green)\W\$(_prompt_colour default)"
+_prompt_git_branch="\$(_prompt_colour blue)\$(__bash_git_branch)\$(_prompt_colour default)"
+_prompt_git_dirty="\$(_prompt_colour magenta)\$(__bash_git_dirty)\$(_prompt_colour default)"
+_prompt_rvm_interpreter="\$(_prompt_colour yellow)\$(__bash_rvm_prompt_additions)\$(_prompt_colour default)"
+_prompt_input_designator="\n\$(_prompt_colour green)$prompt_designator_symbol\$(_prompt_colour default) "
+_prompt_input_continued="\$(_prompt_colour yellow)$prompt_designator_alternate\$(_prompt_colour default) "
 
 
 PS1="${_prompt_pwd} ${_prompt_git_branch}${_prompt_rvm_interpreter}${_prompt_git_dirty}${_prompt_input_designator}"
