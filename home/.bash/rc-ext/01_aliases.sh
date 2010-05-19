@@ -6,7 +6,7 @@ alias gi="git init"
 alias gc="git clone"
 alias gr="git remote"
 
-which hub && eval $(hub alias -s bash)
+which -s hub && eval $(hub alias -s bash)
 
 
 # Changes into the directory for a given gem.
