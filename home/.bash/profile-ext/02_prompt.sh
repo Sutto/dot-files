@@ -1,5 +1,5 @@
 git_dirty_marker="✘"
-prompt_designator_symbol="‣"
+prompt_designator_symbol="»"
 prompt_designator_alternate="…"
 
 _prompt_colour() {
