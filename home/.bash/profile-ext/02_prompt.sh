@@ -3,6 +3,7 @@ prompt_designator_symbol="➤"
 prompt_designator_alternate="…"
 
 _prompt_colour() {
+  echo "Got prompt color: $1\n\n"
   echo -n '\['
   if [[ "$1" -eq "default" ]]; then
     echo -n "\\e[0m"
