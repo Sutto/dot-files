@@ -3,7 +3,6 @@ prompt_designator_symbol="➤"
 prompt_designator_alternate="…"
 
 _prompt_colour() {
-  echo -n '\['
   if [[ "$1" -eq "default" ]]; then
     echo -e -n "\033[0m"
   else
@@ -21,7 +20,6 @@ _prompt_colour() {
     esac
     echo -n -e "\033[3${color_number}m"
   fi
-  echo -n '\]'
 }
 
 __bash_git_branch() {
