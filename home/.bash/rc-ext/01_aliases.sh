@@ -47,7 +47,16 @@ r() {
     echo "Please change to the root of your project first." >&2
     return 1
   fi
+}
 
+grt() {
+  local remote="$2"
+  local branch="$1"
+  [[ -z $remote ]] && remote="origin"
+  [[ -z $branch ]] && branch="master"
+  git fetch "$remote"
+  git config "branch.$branch.remote" "$remote"
+  git config "branch.$branch.merge" "refs/heads/$branch"
 }
 
 alias ss="r server"
