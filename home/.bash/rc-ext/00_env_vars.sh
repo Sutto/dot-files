@@ -1,4 +1,4 @@
-export EDITOR=mvim
+export EDITOR="mvim -f"
 export CLICOLOR=1
 export GREP_OPTIONS='--color=auto'
 # TODO: Work out how to make CDPATH quiet
