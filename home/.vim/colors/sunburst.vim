@@ -62,6 +62,7 @@ hi Special      guifg=#daefa3
 hi Title        guifg=#cdcdcd
 hi Search       guifg=NONE    guibg=#303030 gui=NONE
 hi IncSearch    guifg=NONE    guibg=#303030 gui=NONE
+hi Folded       guibg=#333333 guifg=#CCCCCC
 hi rubyInstanceVariable    guifg=#3e87e3
 hi rubyBlockArgument       guifg=#3e87e3
 hi rubyMethod              guifg=#e28964

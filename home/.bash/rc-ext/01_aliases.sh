@@ -10,8 +10,6 @@ alias gcom="git commit -am"
 #which -s hub && eval $(hub alias -s bash)
 alias g=hub
 
-
-# Changes into the directory for a given gem.
 cdgem() {
   local gem_name="$1"
   local gem_dir="$GEM_HOME"

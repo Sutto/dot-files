@@ -162,6 +162,7 @@ nmap <leader>v :vsplit<CR> <C-w><C-w>
   autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
   autocmd FileType php set omnifunc=phpcomplete#CompletePHP
   autocmd FileType c set omnifunc=ccomplete#Complete
+  autocmd FileType java compiler ant
 
 
   " have some fun with bufexplorer
