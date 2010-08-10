@@ -1,7 +1,13 @@
+update_path() {
+  for path_entry in "$@"; do
+    if [[ -n "$path_entry" && -d "$path_entry" ]]; then
+      export PATH="$path_entry:$PATH"
+    fi
+  done
+}
+update_path ~/bin ~/Code/bin
+
 export EDITOR="mvim -f"
 export CLICOLOR=1
 export GREP_OPTIONS='--color=auto'
-# TODO: Work out how to make CDPATH quiet
-#export CDPATH="~:."
-export PATH="~/bin:~/Code/bin:/opt/ruby-ee/current/bin:/usr/local/mysql/bin:/opt/homebrew/bin:/opt/local/bin:/opt/local/sbin:$PATH"
 export RUBYOPT=-rubygems

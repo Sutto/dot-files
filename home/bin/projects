@@ -71,11 +71,11 @@ class Projects
   def path(name = nil)
     name = name.to_s.strip
     die! "Must provide a name" if name.empty?
-    value = Dir[BASE.join("**/#{name}")].select { |p| File.directory?(p) }.first
+    value = Dir[BASE.join("**/#{name}/.git")].select { |p| File.directory?(p) }.first
     if value.nil?
       die! "Unable to find project path for '#{name}'"
     else
-      puts File.expand_path value
+      puts File.expand_path(File.dirname(value))
     end
   end
 

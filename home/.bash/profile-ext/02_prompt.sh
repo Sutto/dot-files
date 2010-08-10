@@ -40,7 +40,7 @@ __bash_git_dirty() {
 
 __bash_rvm_prompt_additions() {
   if [[ -x ~/.rvm/bin/rvm-prompt ]]; then
-    local interpreter=$(~/.rvm/bin/rvm-prompt)
+    local interpreter="$(~/.rvm/bin/rvm-prompt)"
     [[ -n "$interpreter" ]] && echo -n "using $interpreter "
   fi
 }

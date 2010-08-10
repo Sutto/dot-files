@@ -10,19 +10,30 @@ alias gcom="git commit -am"
 #which -s hub && eval $(hub alias -s bash)
 alias g=hub
 
+lsgems() {
+  for dir in $(echo "${GEM_PATH:-"$(gem env gempath)"}" | tr ':' ' '); do
+    /bin/ls $dir/gems
+  done | sort | uniq
+  unset dir
+}
+
 cdgem() {
   local gem_name="$1"
-  local gem_dir="$GEM_HOME"
-  if [[ -z "$gem_dir" ]]; then
-    local gem_dir=$(gem env gemdir)
+  local gem_dirs="${GEM_PATH:-"$(gem env gempath)"}"
+  if [[ -z "$1" ]]; then
+    cd "${GEM_HOME:-"$(gem env gemhome)"}"
+    return
   fi
-  local full_gem_path="$gem_dir/gems/$gem_name"
-  if [[ -d "$full_gem_path" ]]; then
-    cd "$full_gem_path"
-  else
-    echo "Unknown gem: $gem_name" 2>&1
-    return 1
-  fi
+  for dir in $(echo "$gem_dirs" | tr ':' ' '); do
+    # Get the latest version
+    local full_gem_name="$(/bin/ls "$dir/gems" | grep "^$gem_name" | sort | head -n1)"
+    if [[ -n "$full_gem_name" ]]; then
+      cd "$dir/gems/$full_gem_name"
+      return 0
+    fi
+  done
+  echo "Unknown gem: $gem_name" 2>&1
+  return 1
 }
 
 rails_version() {
@@ -58,6 +69,11 @@ grt() {
   git config "branch.$branch.merge" "refs/heads/$branch"
 }
 
+pless() { 
+    pygmentize $1 | less -r 
+}
+
+
 alias ss="r server"
 alias sc="r console"
 alias sp='r plugin'
@@ -65,7 +81,7 @@ alias sg='r generate'
 alias sd="r dbconsole"
 
 alias rr='touch tmp/restart.txt'
-alias wl='tail -f log/*.log'
+alias wl='tail -n0 -f log/*.log'
 alias rwl='rr && wl'
 
 alias udf='cd ~/.homesick/repos/dot-files && git pull && homesick symlink dot-files && cd - && source ~/.bash_profile'
