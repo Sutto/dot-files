@@ -106,7 +106,7 @@ nmap <leader>v :vsplit<CR> <C-w><C-w>
   let g:rails_statusline=0
 
   " quit NERDTree after openning a file
-  let NERDTreeQuitOnOpen=1
+  "let NERDTreeQuitOnOpen=1
   " colored NERD Tree
   let NERDChristmasTree = 1
   let NERDTreeHighlightCursorline = 1
@@ -139,8 +139,7 @@ nmap <leader>v :vsplit<CR> <C-w><C-w>
     " treat rackup files like ruby
     au BufRead,BufNewFile *.ru set ft=ruby
     au BufRead,BufNewFile Gemfile set ft=ruby
-    au BufRead,BufNewFile Gemfile set ft=ruby                                   
-    au BufRead,BufNewFile Capfile set ft=ruby                                   
+    au BufRead,BufNewFile Capfile set ft=ruby
     au BufRead,BufNewFile *.god set ft=ruby  
   augroup END
 

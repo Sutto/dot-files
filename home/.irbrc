@@ -18,7 +18,18 @@ begin
                               :interactive_editor)
 rescue LoadError
 end
- 
+
+begin
+  require "ap"
+  IRB::Irb.class_eval do
+    def output_value
+      ap @context.last_value
+    end
+  end
+rescue LoadError => e
+end
+
+
 # Require PrettyPrint cuz it pwns...how did I not know about this?
 require 'pp'
  
