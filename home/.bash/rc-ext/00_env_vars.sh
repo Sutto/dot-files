@@ -7,6 +7,10 @@ update_path() {
 }
 update_path ~/bin ~/Code/bin
 
+if command -v brew >/dev/null; then
+  update_path `brew --prefix`/share/npm/bin
+fi
+
 export EDITOR="mvim -f"
 export CLICOLOR=1
 export GREP_OPTIONS='--color=auto'

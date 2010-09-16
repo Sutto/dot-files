@@ -1,4 +1,4 @@
-git_dirty_marker="✘"
+vc_dirty_marker="✘"
 prompt_designator_symbol="»"
 prompt_designator_alternate="…"
 
@@ -24,17 +24,15 @@ _prompt_colour() {
   echo -n '\]'
 }
 
-__bash_git_branch() {
-  local git_branch=$(git symbolic-ref HEAD 2> /dev/null| cut -d / -f 3)
-  if [ -z "$git_branch" ]; then
-    git_branch=$(git rev-parse HEAD 2> /dev/null | cut -c6)
-  fi
-  [[ -n "$git_branch" ]] && echo -n "on $git_branch "
+__bash_vcprompt_on() {
+  local vcprompt_value="$(vcprompt --format "%b")"
+  [[ -n "$vcprompt_value" ]] && echo -n "on $vcprompt_value "
 }
 
-__bash_git_dirty() {
-  if [[ -n $(git status -s 2> /dev/null) ]]; then
-    echo -n "$git_dirty_marker "
+__bash_vcprompt_dirty() {
+  local vcprompt_status="$(vcprompt --format "%i")"
+  if [[ -n "$vcprompt_status" && "$vcprompt_status" != "clean" ]]; then
+    echo -n "$vc_dirty_marker "
   fi
 }
 
@@ -47,8 +45,8 @@ __bash_rvm_prompt_additions() {
 
 # Each part of the prompt.
 _prompt_pwd="$(_prompt_colour green)\W$(_prompt_colour default)"
-_prompt_git_branch="$(_prompt_colour blue)\$(__bash_git_branch)$(_prompt_colour default)"
-_prompt_git_dirty="$(_prompt_colour magenta)\$(__bash_git_dirty)$(_prompt_colour default)"
+_prompt_git_branch="$(_prompt_colour blue)\$(__bash_vcprompt_on)$(_prompt_colour default)"
+_prompt_git_dirty="$(_prompt_colour magenta)\$(__bash_vcprompt_dirty)$(_prompt_colour default)"
 _prompt_rvm_interpreter="$(_prompt_colour yellow)\$(__bash_rvm_prompt_additions)$(_prompt_colour default)"
 _prompt_input_designator="\n$(_prompt_colour red)$prompt_designator_symbol$(_prompt_colour default) "
 _prompt_input_continued="$(_prompt_colour yellow)$prompt_designator_alternate$(_prompt_colour default) "

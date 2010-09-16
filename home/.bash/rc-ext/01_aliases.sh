@@ -1,6 +1,6 @@
 # All aliases for this shell.
 
-alias bi="bundle install --disable-shared-gems .bundle-cache"
+alias bi="bundle install"
 alias be="bundle exec"
 alias gi="git init"
 alias gc="git clone"
@@ -15,6 +15,10 @@ lsgems() {
     /bin/ls $dir/gems
   done | sort | uniq
   unset dir
+}
+
+lsbundle() {
+  bundle show | grep '\*' | awk '{print $2}'
 }
 
 cdgem() {
@@ -35,6 +39,16 @@ cdgem() {
   echo "Unknown gem: $gem_name" 2>&1
   return 1
 }
+
+cdbundle() {
+  local item_name="$1"
+  if [[ -n "$item_name" ]]; then
+    local gem_path="$(bundle show "$@" 2>/dev/null)"
+    local result="$?"
+    [[ "$result" -gt 0 ]] && cd "$gem_path"
+  fi
+}
+alias cdb=cdbundle
 
 rails_version() {
   which -s rails && rails -v 2>/dev/null | sed 's/Rails //'
@@ -83,5 +97,7 @@ alias sd="r dbconsole"
 alias rr='touch tmp/restart.txt'
 alias wl='tail -n0 -f log/*.log'
 alias rwl='rr && wl'
+alias rd='rr && touch tmp/debug.txt'
+alias rdl='rd && wl'
 
 alias udf='cd ~/.homesick/repos/dot-files && git pull && homesick symlink dot-files && cd - && source ~/.bash_profile'
