@@ -88,6 +88,8 @@ pless() {
 }
 
 
+alias tm='mate'
+
 alias ss="r server"
 alias sc="r console"
 alias sp='r plugin'

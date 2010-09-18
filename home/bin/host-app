@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+require 'readline'
+
+dir = ARGV.shift || Dir.pwd
+app = ARGV.shift || File.basename(dir.to_s)
+rails_env = ARGV.shift || "development"
+
+puts "Setting up #{app}.local in #{dir} as #{rails_env} - Is this correct?"
+
+exit if Readline.readline !~ /^y/i
+
+path = File.expand_path(dir)
+
+lines = [
+  "<VirtualHost *:80>",
+  "  ServerName #{app}.local",
+  "  DocumentRoot \"#{path}/publicc\"",
+  "  RailsEnv #{rails_env}",
+  "  RackEnv #{rails_env}",
+  "  <Directory \"#{path}/public\">",
+  "    Order allow,deny",
+  "    Allow from all",
+  "  </Directory>",
+  "</VirtualHost>"
+]
+
+File.open("/etc/apache2/passenger-vhosts/#{app}", "w+") do |f|
+  f.puts lines.join("\n")
+end
+system "passenger_ghost", "add", "#{app}.local"
+system "system", "apachectl", "restart"

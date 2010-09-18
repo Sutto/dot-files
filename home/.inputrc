@@ -1,11 +1,7 @@
-set completion-ignore-case On
+set completion-ignore-case on
+set show-all-if-ambiguous on
 set bell-style none
 
 "\e[B": history-search-forward
 "\e[A": history-search-backward
-
-# Enable magic space in bash: replace !* with space.
-$if Bash
-  Space: magic-space
-$endif
-
+"\ep": history-search-backward

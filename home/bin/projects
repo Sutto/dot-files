@@ -15,20 +15,24 @@ class Projects
   end
 
   def live_list
-    list = Dir[BASE.join("**/.git")].map { |f| Pathname(f).dirname.basename.to_s }.sort
-    write_lines_to_file CACHE, list
+    list = Dir[BASE.join("**/.git")].map do |f|
+      path = File.dirname(f)
+      [File.basename(path), path]
+    end.sort
+    names = list.map { |l| l.first }
+    write_lines_to_file CACHE, list.map { |i| i.join("=") }
     list
   end
 
   def cached_list
     # Cache is readable and less than 3 minutes out of date with the code dir.
     if CACHE.readable? && File.mtime(CACHE) >= (File.mtime(BASE) - 180)
-      lines_from_file CACHE
+      parts_from lines_from_file(CACHE)
     end
   end
 
   def custom_list
-    lines_from_file CUSTOM
+    parts_from lines_from_file(CUSTOM)
   end
 
   def project_list
@@ -36,7 +40,7 @@ class Projects
   end
 
   def generate!
-    write_lines_to_file CACHE, live_list
+    live_list
   end
 
   # Actions
@@ -46,7 +50,7 @@ class Projects
   end
 
   def list
-    project_list.each do |project|
+    names_from(project_list).each do |project|
       puts project
     end
   end
@@ -54,7 +58,7 @@ class Projects
   def add(name = nil)
     name = name.to_s.strip
     die! "Must give a name" if name.empty?
-    write_lines_to_file CUSTOM, (custom_list + [name]) 
+    write_lines_to_file CUSTOM, (custom_list + ["#{name}=#{Dir.pwd}"]) 
   end
 
   def remove(name = nil)
@@ -71,11 +75,11 @@ class Projects
   def path(name = nil)
     name = name.to_s.strip
     die! "Must provide a name" if name.empty?
-    value = Dir[BASE.join("**/#{name}/.git")].select { |p| File.directory?(p) }.first
+    value = (project_list.detect { |i| i[0].downcase == name.downcase } || []).last
     if value.nil?
       die! "Unable to find project path for '#{name}'"
     else
-      puts File.expand_path(File.dirname(value))
+      puts value
     end
   end
 
@@ -84,6 +88,14 @@ class Projects
   def die!(error)
     $stderr.puts error
     exit! 1
+  end
+  
+  def parts_from(lines)
+    lines.map { |l| l.is_a?(Array) ? l : l.split("=", 2) }
+  end
+  
+  def names_from(lines)
+    parts_from(lines).map { |i| i.first }
   end
 
   def lines_from_file(f)

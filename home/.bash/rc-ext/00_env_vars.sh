@@ -11,7 +11,7 @@ if command -v brew >/dev/null; then
   update_path `brew --prefix`/share/npm/bin
 fi
 
-export EDITOR="mvim -f"
+export EDITOR="/usr/local/bin/mate_w"
 export CLICOLOR=1
 export GREP_OPTIONS='--color=auto'
 export RUBYOPT=-rubygems
