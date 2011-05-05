@@ -6,16 +6,20 @@ dir = ARGV.shift || Dir.pwd
 app = ARGV.shift || File.basename(dir.to_s)
 rails_env = ARGV.shift || "development"
 
+dir = File.expand_path(dir)
+
 puts "Setting up #{app}.local in #{dir} as #{rails_env} - Is this correct?"
 
 exit if Readline.readline !~ /^y/i
+
+puts "Setting up app"
 
 path = File.expand_path(dir)
 
 lines = [
   "<VirtualHost *:80>",
   "  ServerName #{app}.local",
-  "  DocumentRoot \"#{path}/publicc\"",
+  "  DocumentRoot \"#{path}/public\"",
   "  RailsEnv #{rails_env}",
   "  RackEnv #{rails_env}",
   "  <Directory \"#{path}/public\">",
@@ -28,5 +32,5 @@ lines = [
 File.open("/etc/apache2/passenger-vhosts/#{app}", "w+") do |f|
   f.puts lines.join("\n")
 end
-system "passenger_ghost", "add", "#{app}.local"
-system "system", "apachectl", "restart"
+system "rvm", "ree", "exec", "ghost", "add", "#{app}.local"
+system "sudo", "apachectl", "restart"

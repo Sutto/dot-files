@@ -2,13 +2,20 @@
 
 alias bi="bundle install"
 alias be="bundle exec"
+alias bu="bundle update"
 alias gi="git init"
 alias gc="git clone"
 alias gr="git remote"
 alias gcom="git commit -am"
 
+alias tunnel='ssh  -nNt -g -R :9423:0.0.0.0:3000 sutto.net'
+
 #which -s hub && eval $(hub alias -s bash)
 alias g=hub
+
+title_is() {
+  printf "\033]0;%s\007" "$1"
+}
 
 lsgems() {
   for dir in $(echo "${GEM_PATH:-"$(gem env gempath)"}" | tr ':' ' '); do
@@ -78,28 +85,69 @@ grt() {
   local branch="$1"
   [[ -z $remote ]] && remote="origin"
   [[ -z $branch ]] && branch="master"
-  git fetch "$remote"
-  git config "branch.$branch.remote" "$remote"
-  git config "branch.$branch.merge" "refs/heads/$branch"
+  git branch --set-upstream "$branch" "$remote/$branch"
 }
 
-pless() { 
-    pygmentize $1 | less -r 
+pless() {
+    pygmentize $1 | less -r
 }
 
 
 alias tm='mate'
+
+rmc() {
+  if [[ -s /var/run/mailcatcher.pid ]]; then
+    kill `cat /var/run/mailcatcher.pid`
+    rm /var/run/mailcatcher.pid
+  fi
+}
 
 alias ss="r server"
 alias sc="r console"
 alias sp='r plugin'
 alias sg='r generate'
 alias sd="r dbconsole"
+alias gf='git flow'
+alias gff='git flow feature'
 
 alias rr='touch tmp/restart.txt'
 alias wl='tail -n0 -f log/*.log'
 alias rwl='rr && wl'
 alias rd='rr && touch tmp/debug.txt'
 alias rdl='rd && wl'
+alias pbpwd='printf "%s" "$(pwd)" | pbcopy'
 
 alias udf='cd ~/.homesick/repos/dot-files && git pull && homesick symlink dot-files && cd - && source ~/.bash_profile'
+
+ipv_prep() {
+  rake db:drop db:migrate && rake db:seed
+}
+
+# Add the following to your ~/.bashrc or ~/.zshrc
+hitch() {
+  command hitch "$@"
+  if [[ -s "$HOME/.hitch_export_authors" ]] ; then source "$HOME/.hitch_export_authors" ; fi
+}
+alias unhitch='hitch -u'
+# Uncomment to persist pair info between terminal instances
+# hitch
+
+jammbox_release() {
+  local last_release="$(git tag | sort | tail -1)"
+  local release_number="${1:-1}"
+  git checkout master &&
+  git merge develop &&
+  git lg "$last_release"..master &&
+  git tag -a "$(date +'%Y%m%d').$(printf "%02d" "$release_number")" &&
+  git push &&
+  git push --tags &&
+  git checkout develop
+}
+
+power() {
+	cd ~/.pow
+	ln -s $OLDPWD
+	cd $OLDPWD
+	echo "# app ENV config" > .powrc
+	echo "# local ENV config" > .powenv
+}

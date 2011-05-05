@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'httparty'
+require 'awesome_print'
+
+ap HTTParty.get(ARGV[0]).parsed_response

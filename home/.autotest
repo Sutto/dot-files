@@ -1,5 +1,9 @@
-require 'autotest/growl'
-require 'autotest/fsevent'
+begin
+  require 'autotest/growl'
+  require 'autotest/fsevent'
+rescue LoadError
+  warn "No growl / fsevent"
+end
 
 Autotest.add_hook :initialize do |autotest|
   %w{.git .svn .hg .DS_Store ._* vendor}.each {|exception| autotest.add_exception(exception) }
