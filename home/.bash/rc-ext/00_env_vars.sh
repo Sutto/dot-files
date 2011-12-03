@@ -6,12 +6,13 @@ update_path() {
   done
 }
 update_path ~/bin ~/Code/bin
+update_path /usr/local/sbin
 
 if command -v brew >/dev/null; then
   update_path `brew --prefix`/share/npm/bin
 fi
 
-export EDITOR="mate -w"
+export EDITOR="subl -w"
 export CLICOLOR=1
 export GREP_OPTIONS='--color=auto'
 export RUBYOPT="-rrubygems"

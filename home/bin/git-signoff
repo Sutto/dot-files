@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+read -p "Please enter the name of the person signing off: " signoffname
+read -p "Please enter the email of the person signing off: " signoffemail
+
+if [[ $signoffemail != *@* ]]
+then
+  signoffemail=$signoffemail@thefrontiergroup.com.au
+fi
+
+GIT_COMMITTER_NAME="$signoffname" GIT_COMMITTER_EMAIL="$signoffemail" git commit --amend --signoff

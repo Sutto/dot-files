@@ -8,7 +8,7 @@ function lsp {
 }
 
 function cdp {
-  local project_path=$($project_binary path "$1")
+  local project_path="$($project_binary path "$1")"
   if [[ ! -z "$project_path" ]]; then
     cd "$project_path"
   fi

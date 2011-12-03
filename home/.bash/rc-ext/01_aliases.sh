@@ -8,10 +8,15 @@ alias gc="git clone"
 alias gr="git remote"
 alias gcom="git commit -am"
 
-alias tunnel='ssh  -nNt -g -R :9423:0.0.0.0:3000 sutto.net'
+# Add the following to your ~/.bashrc or ~/.zshrc
+hitch() {
+  command hitch "$@"
+  if [[ -s "$HOME/.hitch_export_authors" ]] ; then source "$HOME/.hitch_export_authors" ; fi
+}
+alias unhitch='hitch -u'
+# Uncomment to persist pair info between terminal instances
+# hitch
 
-#which -s hub && eval $(hub alias -s bash)
-alias g=hub
 
 title_is() {
   printf "\033]0;%s\007" "$1"
@@ -56,6 +61,12 @@ cdbundle() {
   fi
 }
 alias cdb=cdbundle
+
+tunnel() {
+  local tunnel_port="${1:-3000}"
+  echo "Tunneling port $tunnel_port locally to *.dev.filtersquad.com"
+  ssh -nNt -g -R :1080:0.0.0.0:$tunnel_port jammbox
+}
 
 rails_version() {
   which -s rails && rails -v 2>/dev/null | sed 's/Rails //'
@@ -102,7 +113,18 @@ rmc() {
   fi
 }
 
-alias ss="r server"
+ss() {
+  if [[ -s ./Procfile ]]; then
+    if ! command -v foreman >/dev/null; then
+      echo "Please run: gem install foreman"
+      return 1
+    fi
+    foreman start
+  else
+    r server "$@"
+  fi
+  
+}
 alias sc="r console"
 alias sp='r plugin'
 alias sg='r generate'
@@ -111,7 +133,7 @@ alias gf='git flow'
 alias gff='git flow feature'
 
 alias rr='touch tmp/restart.txt'
-alias wl='tail -n0 -f log/*.log'
+alias wl='mkdir -p tmp && tail -n0 -f log/*.log'
 alias rwl='rr && wl'
 alias rd='rr && touch tmp/debug.txt'
 alias rdl='rd && wl'
@@ -119,26 +141,23 @@ alias pbpwd='printf "%s" "$(pwd)" | pbcopy'
 
 alias udf='cd ~/.homesick/repos/dot-files && git pull && homesick symlink dot-files && cd - && source ~/.bash_profile'
 
-ipv_prep() {
-  rake db:drop db:migrate && rake db:seed
-}
-
-# Add the following to your ~/.bashrc or ~/.zshrc
-hitch() {
-  command hitch "$@"
-  if [[ -s "$HOME/.hitch_export_authors" ]] ; then source "$HOME/.hitch_export_authors" ; fi
-}
-alias unhitch='hitch -u'
-# Uncomment to persist pair info between terminal instances
-# hitch
-
 jammbox_release() {
   local last_release="$(git tag | sort | tail -1)"
-  local release_number="${1:-1}"
+  local supposed_next_release="$(ruby -e 'puts `git tag`.split("\n").sort.last.succ')"
+  local tag_prefix="$(date +'%Y%m%d')."
+  if [[ "$supposed_next_release" == "$tag_prefix"* ]]; then
+    local new_tag="$supposed_next_release"
+  else
+    local release_number="${1:-1}"
+    local new_tag="${tag_prefix}$(printf "%02d" "$release_number")"
+  fi
+  echo "Merging develop into master" &&
   git checkout master &&
   git merge develop &&
   git lg "$last_release"..master &&
-  git tag -a "$(date +'%Y%m%d').$(printf "%02d" "$release_number")" &&
+  echo "Please write a tag:" &&
+  git tag -a "$new_tag" &&
+  echo "Pushing code + tags" &&
   git push &&
   git push --tags &&
   git checkout develop

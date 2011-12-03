@@ -42,6 +42,11 @@ class Projects
   def generate!
     live_list
   end
+  
+  def console
+    require 'irb'
+    IRB.start
+  end
 
   # Actions
 
@@ -64,7 +69,7 @@ class Projects
   def remove(name = nil)
     name = name.to_s.strip
     die! "Must give a name" if name.empty?
-    list = custom_list.reject { |i| i.downcase == name.downcase }
+    list = custom_list.reject { |i| i[0].downcase == name.downcase }
     write_lines_to_file CUSTOM, list
   end
 
@@ -128,6 +133,8 @@ when "regenerate"
   Projects.action :regenerate
 when "path"
   Projects.action :path, ARGV.shift
+when "console"
+  Projects.action :console
 else
   Projects.action :usage
   exit 1
