@@ -7,6 +7,9 @@ update_path() {
 }
 update_path ~/bin ~/Code/bin
 update_path /usr/local/sbin
+update_path /usr/local/bin
+
+. ~/.api_keys.sh
 
 if command -v brew >/dev/null; then
   update_path `brew --prefix`/share/npm/bin

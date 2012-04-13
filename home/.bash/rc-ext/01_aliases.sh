@@ -8,6 +8,9 @@ alias gc="git clone"
 alias gr="git remote"
 alias gcom="git commit -am"
 
+alias yt="\youtube-dl -l -f 22"
+alias youtube-dl="\youtube-dl -l"
+
 # Add the following to your ~/.bashrc or ~/.zshrc
 hitch() {
   command hitch "$@"
@@ -142,8 +145,8 @@ alias pbpwd='printf "%s" "$(pwd)" | pbcopy'
 alias udf='cd ~/.homesick/repos/dot-files && git pull && homesick symlink dot-files && cd - && source ~/.bash_profile'
 
 jammbox_release() {
-  local last_release="$(git tag | sort | tail -1)"
-  local supposed_next_release="$(ruby -e 'puts `git tag`.split("\n").sort.last.succ')"
+  local last_release="$(git tag | grep "^201" | sort | tail -1)"
+  local supposed_next_release="$(ruby -e 'puts `git tag | grep "^201"`.split("\n").sort.last.succ')"
   local tag_prefix="$(date +'%Y%m%d')."
   if [[ "$supposed_next_release" == "$tag_prefix"* ]]; then
     local new_tag="$supposed_next_release"
@@ -154,8 +157,8 @@ jammbox_release() {
   echo "Merging develop into master" &&
   git checkout master &&
   git merge develop &&
-  git lg "$last_release"..master &&
-  echo "Please write a tag:" &&
+  GIT_PAGER=cat git lg "$last_release"..master &&
+  echo "Please write a tag" &&
   git tag -a "$new_tag" &&
   echo "Pushing code + tags" &&
   git push &&
@@ -169,4 +172,13 @@ power() {
 	cd $OLDPWD
 	echo "# app ENV config" > .powrc
 	echo "# local ENV config" > .powenv
+}
+
+disable_recent() {
+  if [[ -z "$1" ]]; then
+    return 1
+  fi
+  defaults write  "$1" NSRecentDocumentsLimit 0
+  defaults delete "${1}.LSSharedFileList" RecentDocuments
+  defaults write  "${1}.LSSharedFileList" RecentDocuments -dict-add MaxAmount 0
 }

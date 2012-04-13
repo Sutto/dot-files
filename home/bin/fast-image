@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+/Users/sutto/.rvm/wrappers/ruby-1.9.3-p0/ruby -S fast-image.rb "$@"
