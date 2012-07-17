@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'json'
+require 'open-uri'
+require 'uri'
+
+if ARGV.empty?
+  exit 1
+end
+
+puts "Getting info..."
+url = "http://api.soundcloud.com/resolve.json?client_id=apigee&url=#{URI.escape ARGV.first}"
+
+parsed = JSON.parse open(url).read
+
+puts "Finding URL..."
+url = parsed['download_url'] || parsed['stream_url']
+
+exit 1 unless url
+
+url += "?client_id=apigee"
+
+name = "#{parsed['title']}.mp3"
+
+puts "Downloading..."
+File.open(name, 'wb+') do |f|
+  f.write open(url).read
+end

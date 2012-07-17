@@ -15,7 +15,8 @@ if command -v brew >/dev/null; then
   update_path `brew --prefix`/share/npm/bin
 fi
 
-export EDITOR="subl -w"
+export EDITOR="subl -w -n"
+export BUNDLER_EDITOR="subl"
 export CLICOLOR=1
 export GREP_OPTIONS='--color=auto'
 export RUBYOPT="-rrubygems"

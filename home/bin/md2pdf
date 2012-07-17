@@ -2,7 +2,7 @@
 mkdir -p output
 for file in "$@"; do
   echo ">> Comping $file to PDF"
-  rvm ree exec rdiscount "$file" | htmldoc . --no-toc --no-title -f "output/${file/.md/.pdf}" -
+  rvm default exec rdiscount "$file" | htmldoc . --no-toc --no-title -f "output/${file/.md/.pdf}" -
   echo ">> COMPILED."
 done
 

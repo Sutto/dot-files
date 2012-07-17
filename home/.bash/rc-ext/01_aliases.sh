@@ -20,6 +20,20 @@ alias unhitch='hitch -u'
 # Uncomment to persist pair info between terminal instances
 # hitch
 
+bl() {
+  # bundle list --no-color | awk '{print $2}' | tail -n +2
+  if [[ -z "$1" ]]; then
+    echo "Usage: bl gem-name directory" >&2
+    return 1
+  fi
+
+  if [[ -z "$2" || ! -d "$2" ]]; then
+    echo "Please ensure a dir is provided" >&2
+    return 2
+  fi
+
+  bundle config --local "local.$1" "$2"
+}
 
 title_is() {
   printf "\033]0;%s\007" "$1"
@@ -33,7 +47,7 @@ lsgems() {
 }
 
 lsbundle() {
-  bundle show | grep '\*' | awk '{print $2}'
+  bundle show --no-color | grep '\*' | awk '{print $2}'
 }
 
 cdgem() {
@@ -126,8 +140,8 @@ ss() {
   else
     r server "$@"
   fi
-  
 }
+
 alias sc="r console"
 alias sp='r plugin'
 alias sg='r generate'
@@ -181,4 +195,24 @@ disable_recent() {
   defaults write  "$1" NSRecentDocumentsLimit 0
   defaults delete "${1}.LSSharedFileList" RecentDocuments
   defaults write  "${1}.LSSharedFileList" RecentDocuments -dict-add MaxAmount 0
+}
+
+mediakeys() {
+  if [[ -z "$1" || "$1" == "disable" ]]; then
+    echo "Disabling the RCD agent"
+    launchctl unload -w /System/Library/LaunchAgents/com.apple.rcd.plist
+  else
+    echo "Loading the RCD agent"
+    launchctl load -w /System/Library/LaunchAgents/com.apple.rcd.plist
+  fi
+}
+
+pr() {
+  identifier="$(hub pull-request)"
+  if [[ "$?" != 0 ]]; then
+    echo "Cancelled Pull Request."
+    return 1
+  fi
+  echo "$identifier" | pbcopy
+  open "$identifier"
 }
