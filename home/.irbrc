@@ -83,7 +83,9 @@ if ENV['RAILS_ENV'] || defined?(Rails)
 
   require 'logger'
   if defined?(Rails) && Rails.respond_to?(:logger=)
+    tagged_logger = defined?(ActiveSupport::TaggedLogging) && Rails.logger.is_a?(ActiveSupport::TaggedLogging)
     Rails.logger = Logger.new(STDOUT)
+    Rails.logger = ActiveSupport::TaggedLogging.new(Rails.logger) if tagged_logger
     defined?(ActiveRecord) && ActiveRecord::Base.logger = Rails.logger
     defined?(Mongoid)      && Mongoid.logger = Rails.logger
     if defined?(MongoMapper)
@@ -145,16 +147,3 @@ proc do
   path = File.join(Dir.pwd, ".irb")
   load(path) if File.file?(path)
 end.call
-
-if defined?(Rails)
-
-  def rr
-    if Rails::VERSION::STRING >= "3.0.0"
-      puts "Reloading..."
-      ActionDispatch::Callbacks.new(lambda {}, false).call({})
-    else
-      reload!
-    end
-  end
-
-end

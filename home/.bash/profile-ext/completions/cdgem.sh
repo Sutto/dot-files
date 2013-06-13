@@ -19,4 +19,3 @@ function __bash_complete_cdbundle {
 complete -F __bash_complete_cdgem    cdgem
 complete -F __bash_complete_cdbundle cdbundle
 complete -F __bash_complete_cdbundle cdb
-

@@ -1,1 +1,0 @@
-[[ -s "$HOME/.aws_keys" ]] && . "$HOME/.aws_keys"

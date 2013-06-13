@@ -13,11 +13,10 @@ load_completions_under() {
 }
 
 load_all_completions() {
-  load_completion ~/.rvm/scripts/completion
   if command -v brew > /dev/null; then
     homebrew_prefix="$(brew --prefix)"
     load_completion "$homebrew_prefix/Library/Contributions/brew_bash_completion.sh"
     load_completion "$homebrew_prefix/etc/bash_completion"
   fi
-  load_completions_under ~/.bash/profile-ext/completions/ 
+  load_completions_under ~/.bash/profile-ext/completions/
 }

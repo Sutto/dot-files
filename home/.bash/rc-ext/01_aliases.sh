@@ -3,22 +3,9 @@
 alias bi="bundle install"
 alias be="bundle exec"
 alias bu="bundle update"
-alias gi="git init"
-alias gc="git clone"
-alias gr="git remote"
-alias gcom="git commit -am"
 
 alias yt="\youtube-dl -l -f 22"
 alias youtube-dl="\youtube-dl -l"
-
-# Add the following to your ~/.bashrc or ~/.zshrc
-hitch() {
-  command hitch "$@"
-  if [[ -s "$HOME/.hitch_export_authors" ]] ; then source "$HOME/.hitch_export_authors" ; fi
-}
-alias unhitch='hitch -u'
-# Uncomment to persist pair info between terminal instances
-# hitch
 
 bl() {
   # bundle list --no-color | awk '{print $2}' | tail -n +2
@@ -100,11 +87,8 @@ r() {
     ./script/$name $@
   elif [[ -x "./script/rails" ]]; then
     ./script/rails "$name" $@
-  elif [[ -n "$(rails_version | grep '^3')" ]]; then
-    rails "$name" $@
   else
-    echo "Please change to the root of your project first." >&2
-    return 1
+    rails "$name" $@
   fi
 }
 
@@ -131,15 +115,7 @@ rmc() {
 }
 
 ss() {
-  if [[ -s ./Procfile ]]; then
-    if ! command -v foreman >/dev/null; then
-      echo "Please run: gem install foreman"
-      return 1
-    fi
-    foreman start
-  else
-    r server "$@"
-  fi
+  r server "$@"
 }
 
 alias sc="r console"
@@ -155,8 +131,6 @@ alias rwl='rr && wl'
 alias rd='rr && touch tmp/debug.txt'
 alias rdl='rd && wl'
 alias pbpwd='printf "%s" "$(pwd)" | pbcopy'
-
-alias udf='cd ~/.homesick/repos/dot-files && git pull && homesick symlink dot-files && cd - && source ~/.bash_profile'
 
 jammbox_release() {
   local last_release="$(git tag | grep "^201" | sort | tail -1)"
@@ -178,14 +152,6 @@ jammbox_release() {
   git push &&
   git push --tags &&
   git checkout develop
-}
-
-power() {
-	cd ~/.pow
-	ln -s $OLDPWD
-	cd $OLDPWD
-	echo "# app ENV config" > .powrc
-	echo "# local ENV config" > .powenv
 }
 
 disable_recent() {
@@ -215,4 +181,24 @@ pr() {
   fi
   echo "$identifier" | pbcopy
   open "$identifier"
+}
+
+gifify() {
+  if [[ -n "$1" ]]; then
+    if [[ $2 == '--good' ]]; then
+      ffmpeg -i $1 -r 10 -vcodec png out-static-%05d.png
+      time convert -verbose +dither -layers Optimize -resize 600x600\> out-static*.png  GIF:- | gifsicle --colors 128 --delay=5 --loop --optimize=3 --multifile - > $1.gif
+      rm out-static*.png
+    else
+      ffmpeg -i $1 -s 600x400 -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3 > $1.gif
+    fi
+  else
+    echo "proper usage: gifify <input_movie.mov>. You DO need to include extension."
+  fi
+}
+
+cleanSpec() {
+  local rspecCommand="be rspec $(pbpaste | awk '{print $2}' | awk -F: '{print $1}' | sort -u | grep -v spec/shared/ | tr '\n' ' ')"
+  echo "$rspecCommand"
+  echo "$rspecCommand" | pbcopy
 }

@@ -36,10 +36,9 @@ __bash_vcprompt_dirty() {
   fi
 }
 
-__bash_rvm_prompt_additions() {
-  if [[ -x ~/.rvm/bin/rvm-prompt ]]; then
-    local interpreter="$(~/.rvm/bin/rvm-prompt)"
-    [[ -n "$interpreter" ]] && echo -n "using $interpreter "
+__bash_ruby_prompt_additions() {
+  if [[ -n "$RUBY_VERSION" ]]; then
+    echo -n "using $RUBY_VERSION "
   fi
 }
 
@@ -47,12 +46,12 @@ __bash_rvm_prompt_additions() {
 _prompt_pwd="$(_prompt_colour green)\W$(_prompt_colour default)"
 _prompt_git_branch="$(_prompt_colour blue)\$(__bash_vcprompt_on)$(_prompt_colour default)"
 _prompt_git_dirty="$(_prompt_colour magenta)\$(__bash_vcprompt_dirty)$(_prompt_colour default)"
-_prompt_rvm_interpreter="$(_prompt_colour yellow)\$(__bash_rvm_prompt_additions)$(_prompt_colour default)"
+_prompt_ruby_interpreter="$(_prompt_colour yellow)\$(__bash_ruby_prompt_additions)$(_prompt_colour default)"
 _prompt_input_designator="\n$(_prompt_colour red)$prompt_designator_symbol$(_prompt_colour default) "
 _prompt_input_continued="$(_prompt_colour yellow)$prompt_designator_alternate$(_prompt_colour default) "
 
 _stty_reset="$(stty echo)"
 
-PS1="${_stty_reset}${_prompt_pwd} ${_prompt_git_branch}${_prompt_rvm_interpreter}${_prompt_git_dirty}${_prompt_input_designator}"
+PS1="${_stty_reset}${_prompt_pwd} ${_prompt_git_branch}${_prompt_ruby_interpreter}${_prompt_git_dirty}${_prompt_input_designator}"
 PS2="${_stty_reset}${_prompt_input_continued}"
 
