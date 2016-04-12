@@ -91,8 +91,6 @@ if ENV['RAILS_ENV'] || defined?(Rails)
     if defined?(MongoMapper)
       MongoMapper.connection.instance_variable_set :@logger, Rails.logger
     end
-  else
-    Object.const_set(:RAILS_DEFAULT_LOGGER, Logger.new(STDOUT))
   end
 
   def loud_logger

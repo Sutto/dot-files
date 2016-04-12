@@ -17,6 +17,8 @@ load_all_completions() {
     homebrew_prefix="$(brew --prefix)"
     load_completion "$homebrew_prefix/Library/Contributions/brew_bash_completion.sh"
     load_completion "$homebrew_prefix/etc/bash_completion"
+    load_completion "$homebrew_prefix/Cellar/git/1.8.3.1/etc/bash_completion.d/git-completion.bash"
   fi
   load_completions_under ~/.bash/profile-ext/completions/
 }
+

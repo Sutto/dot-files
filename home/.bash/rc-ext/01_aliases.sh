@@ -105,8 +105,6 @@ pless() {
 }
 
 
-alias tm='mate'
-
 rmc() {
   if [[ -s /var/run/mailcatcher.pid ]]; then
     kill `cat /var/run/mailcatcher.pid`
@@ -174,6 +172,13 @@ mediakeys() {
 }
 
 pr() {
+
+
+  local branchURL="$(git config remote.origin.url | sed 's/git\@github\.com\:/https\:\/\/github.com\//' | sed 's/\.git//')"
+  git pi && open "$branchURL/compare/master...$(git symbolic-ref --short HEAD)"
+
+  return
+
   identifier="$(hub pull-request)"
   if [[ "$?" != 0 ]]; then
     echo "Cancelled Pull Request."
@@ -201,4 +206,10 @@ cleanSpec() {
   local rspecCommand="be rspec $(pbpaste | awk '{print $2}' | awk -F: '{print $1}' | sort -u | grep -v spec/shared/ | tr '\n' ' ')"
   echo "$rspecCommand"
   echo "$rspecCommand" | pbcopy
+}
+
+chr() { chruby "$(chruby | selecta)"; }
+
+notify() {
+  terminal-notifier -message "$1"
 }

@@ -9,21 +9,30 @@ if ARGV.empty?
   exit 1
 end
 
+def download_track(track)
+  destination = track['title'] + ".mp3"
+  downloadable = track['downloadable']
+  url = track['download_url'] || track['stream_url']
+  return false if url.nil?
+
+  puts "Downloading #{track['title']}:"
+  # if system "curl", "-L", "-o", name, url
+  #   puts "Downloaded."
+  # else
+  #   puts "Download failed, returning."
+  # end
+end
+
 puts "Getting info..."
 url = "http://api.soundcloud.com/resolve.json?client_id=apigee&url=#{URI.escape ARGV.first}"
 
 parsed = JSON.parse open(url).read
 
-puts "Finding URL..."
-url = parsed['download_url'] || parsed['stream_url']
-
-exit 1 unless url
-
-url += "?client_id=apigee"
-
-name = "#{parsed['title']}.mp3"
-
-puts "Downloading..."
-File.open(name, 'wb+') do |f|
-  f.write open(url).read
+case parsed['kind']
+when 'playlist'
+  parsed['tracks'].each do |t|
+    download_track t
+  end
+when 'track'
+  download_track parsed
 end
